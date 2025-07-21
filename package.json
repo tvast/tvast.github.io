@@ -1,0 +1,19 @@
+{
+  "name": "cv-oldschool",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve"
+  },
+  "dependencies": {
+    "vue": "^2.7.14",
+    "vue-router": "^3.6.5"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^5.0.0",
+    "@vue/cli-plugin-eslint": "^5.0.0",
+    "@vue/cli-plugin-pwa": "^5.0.0",
+    "@vue/cli-service": "^5.0.0",
+    "eslint": "^8.57.1"
+  }
+}
