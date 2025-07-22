@@ -88,17 +88,20 @@ export default {
 
 <style scoped>
 .terminal {
-  background: #111;
-  color: #0f0;
-  font-family: 'Courier New', Courier, monospace;
-  padding: 1rem;
-  height: 300px;
-  overflow-y: auto;
-  border-radius: 5px;
-  box-shadow: 0 0 10px #0f0;
+  background: rgba(10, 10, 10, 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(0, 255, 0, 0.2);
+  border-radius: 10px;
+  color: #00ff88;
+  font-family: 'Fira Code', monospace;
+  padding: 1.5rem;
+  min-height: 400px;
+  box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 }
+
 .line {
   white-space: pre-wrap;
   margin-bottom: 0.5rem;
@@ -142,4 +145,13 @@ input {
   background: #0f0;
   color: #111;
 }
+.line {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 </style>
