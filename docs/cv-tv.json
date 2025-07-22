@@ -1,0 +1,97 @@
+[
+  {
+    "company": "Mint Mobile",
+    "title": "Senior Software Developer",
+    "location": "Montpellier",
+    "date": "janvier 2025 - mars 2025",
+    "description": []
+  },
+  {
+    "company": "Accenture",
+    "title": "Architecte de données",
+    "location": "Lille",
+    "date": "septembre 2023 - avril 2024",
+    "description": []
+  },
+  {
+    "company": "Accenture",
+    "title": "Web Developer Specialist",
+    "location": "Lille",
+    "date": "janvier 2022 - septembre 2023",
+    "description": [
+      "SAP Cloud Commerce (Hybris), Vue 2, SCSS, VueX",
+      "Refonte UX/UI avec Algolia",
+      "Formations IA, Blockchain, ML",
+      "RESTful APIs & intégration Algolia",
+      "Code review"
+    ]
+  },
+  {
+    "company": "Claranet France",
+    "title": "Développeur Full Stack",
+    "location": "Lille",
+    "date": "juin 2021 - décembre 2021",
+    "description": [
+      "Vue 2 en TypeScript, Angular V12",
+      "Sockets.io, GRPC",
+      "Optimisation GitLab DevOps pipeline"
+    ]
+  },
+  {
+    "company": "Leihia",
+    "title": "Lead Developer",
+    "location": "Lille",
+    "date": "octobre 2020 - juin 2021",
+    "description": [
+      "App Quasar from scratch",
+      "Bot reconnaissance vocale",
+      "ML/NLP, GitLab CI/CD",
+      "Déploiement staging & prod (Ubuntu)"
+    ]
+  },
+  {
+    "company": "Amadeus",
+    "title": "Fullstack software engineer",
+    "location": "Madrid",
+    "date": "décembre 2019 - mai 2020",
+    "description": [
+      "Prototype JS (React, Vue, Angular)",
+      "Dashboard monitoring (Adobe, CSV, SAP, Apigee)",
+      "Blog writing, public speaking"
+    ]
+  },
+  {
+    "company": "IBM Interactive",
+    "title": "Front end software engineer",
+    "location": "Paris",
+    "date": "janvier 2019 - juillet 2019",
+    "description": [
+      "App crédit bancaire (framework privé)",
+      "Méthodologie Agile Scrum",
+      "JavaScript, Swagger, Java 8, Cucumber"
+    ]
+  },
+  {
+    "company": "Institut français",
+    "title": "VIA Ingénieur web",
+    "location": "Madrid",
+    "date": "novembre 2016 - décembre 2018",
+    "description": [
+      "Jeux éducatifs",
+      "Plateforme e-learning",
+      "Dév. site culturel (WordPress, Moodle, HTML5, CSS3, JS)"
+    ]
+  },
+  {
+    "company": "VICE Media",
+    "title": "Assistant traffic Manager",
+    "location": "",
+    "date": "décembre 2013 - juin 2014",
+    "description": [
+      "Trafic pub sur 10k sites premium",
+      "Facturation, optimisation média",
+      "DFP premium"
+    ]
+  }
+]
+
