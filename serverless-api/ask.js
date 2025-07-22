@@ -28,10 +28,9 @@ export default async function handler(req, res) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                Authorization: `Bearer ${apiKey}`,
-                'HTTP-Referer': 'https://tvast-github-io.vercel.app',
-                'X-Title': 'my-ai-terminal',
+                'Authorization': `Bearer ${process.env.OPENROUTER_API_KEY}`,
             },
+
             body: JSON.stringify({
                 model: 'google/gemma-3-27b-it:free',
                 messages: [{
