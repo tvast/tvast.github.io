@@ -1,57 +1,36 @@
-G<template>
+<template>
   <div :class="currentTheme" id="app">
     <header>
       <button @click="setTheme('dark')">Dark</button>
       <button @click="setTheme('grey')">Grey</button>
       <button @click="setTheme('pink')">Pink</button>
     </header>
-<Timeline />
-<ThreeExperience :skills="skillsList" />
-    <AIPrompt />
-    <TimelineRoot title="Work Experience" :items="experience" />
-    <TimelineRoot title="Education" :items="education" />
-    <SkillCloud :skills="skillList" />
-<MasonryBoard />
+
+    <Timeline />
+    <MasonryBoard />
   </div>
 </template>
 
 <script>
-import MasonryBoard from './components/MasonryBoard.vue'
-import SkillCloud from './components/SkillCloud.vue'
-import cv from '@/../public/cv.json';
-import Data from '@/../public/Data.json';
-import TimelineRoot from './components/TimelineRoot.vue'
 import Timeline from './components/Timeline.vue'
-import ThreeExperience from './components/Visual.vue'
-import AIPrompt from './components/AI-Prompt.vue'
+import MasonryBoard from './components/MasonryBoard.vue'
+
 export default {
   name: 'App',
   components: {
-TimelineRoot,
-    MasonryBoard,
-    SkillCloud,
-    Timeline, ThreeExperience,
-    AIPrompt
+    Timeline,
+    MasonryBoard
   },
   data() {
     return {
-      currentTheme: 'theme-dark',
-      cv,
-      skillList: [
-        "React.js", "React Native", "styled-components", "Micro Frontend Architecture",
-        "Next.js", "Nuxt.js (SSR)", "Vue.js (Vue 2)", "Node.js (TypeScript)", "TypeORM",
-        "Modern ORM", "SAST", "DAST", "Dependency Scanning", "OWASP Guidelines",
-        "Unit Testing", "Integration Testing", "End-to-End Testing", "REST API", "gRPC",
-        "CI/CD", "GitLab Pipeline", "French", "Spanish", "English"
-      ],
-Data
+      currentTheme: 'theme-dark', // default theme
     }
   },
   methods: {
     setTheme(theme) {
       this.currentTheme = `theme-${theme}`
       localStorage.setItem('theme', this.currentTheme)
-    }
+    },
   },
   created() {
     const savedTheme = localStorage.getItem('theme')
@@ -68,27 +47,36 @@ Data
   --text-color: #000;
   --primary-color: #42b983;
 }
+
+/* Dark mode */
 .theme-dark {
   --background-color: #121212;
   --text-color: #e0e0e0;
   --primary-color: #42b983;
 }
+
+/* Grey mode */
 .theme-grey {
   --background-color: #f5f5f5;
   --text-color: #333333;
   --primary-color: #666666;
 }
+
+/* Pink mode */
 .theme-pink {
   --background-color: #ffe4e6;
   --text-color: #5a2a2a;
   --primary-color: #d6336c;
 }
+
 div#app {
   background-color: var(--background-color);
   color: var(--text-color);
   min-height: 100vh;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
+
+/* Buttons style */
 header {
   padding: 1rem;
   text-align: center;
@@ -96,6 +84,7 @@ header {
   border-bottom: 1px solid var(--primary-color);
   margin-bottom: 1rem;
 }
+
 button {
   background-color: var(--primary-color);
   border: none;
@@ -106,31 +95,9 @@ button {
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
+
 button:hover {
   opacity: 0.85;
 }
-section {
-  padding: 2rem;
-  border-top: 1px dashed var(--primary-color);
-}
-.theme-dark {
-  --color-accent: #00bcd4;
-  --color-secondary: #aaa;
-  background: #121212;
-  color: #fff;
-}
-.theme-light {
-  --color-accent: #607d8b;
-  --color-secondary: #444;
-  background: #f4f4f4;
-  color: #000;
-}
-.theme-pink {
-  --color-accent: #e91e63;
-  --color-secondary: #880e4f;
-  background: #fff0f6;
-  color: #2c003e;
-}
-
 </style>
 

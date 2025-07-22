@@ -69,7 +69,7 @@
 
 <script>
 import AnimatedLogo from './AnimatedLogo.vue';
-import cv from '@/../public/cv.json';
+import cv from '@/../public/Data.json';
 
 export default {
   name: 'Timeline',
