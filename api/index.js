@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import chatRoute from './chat/routes.js';
+import serverless from 'serverless-http';
 
 dotenv.config();
 const app = express();
@@ -15,7 +16,5 @@ app.use(express.json());
 
 app.use('/api/ask', chatRoute);
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server listening on port ${PORT}`);
-});
+// export handler for Vercel
+export const handler = serverless(app);
