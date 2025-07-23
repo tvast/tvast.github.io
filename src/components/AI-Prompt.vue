@@ -57,11 +57,16 @@ export default {
       this.loading = true;
 
       try {
-        const response = await fetch('https://tvast-github-io.vercel.app/serverless-api/ask', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prompt: cleanedPrompt }),
-        });
+       const response = await fetch('https://tvast-github-io.vercel.app', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'X-Secret-Key': 'your-secret-key-if-you-implemented-auth',
+  },
+  body: JSON.stringify({ prompt: cleanedPrompt }),
+});
+const data = await response.json();
+
 
         if (!response.ok) {
           const error = await response.json();
