@@ -57,12 +57,12 @@ export default {
       this.loading = true;
 
       try {
-       const response = await fetch('http://www.tvast-github-io.vercel.app', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-    'X-Secret-Key': 'your-secret-key-if-you-implemented-auth',
-  },
+       const response = await fetch('https://tvast-github-io.vercel.app/api/ask', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'X-Secret-Key': 'your-secret-key',
+    },
   body: JSON.stringify({ prompt: cleanedPrompt }),
 });
 

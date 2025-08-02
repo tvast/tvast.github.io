@@ -1,16 +1,11 @@
 {
   "name": "api",
   "version": "1.0.0",
-  "description": "api for openrouter",
-  "main": "index.js",
   "type": "module",
-"scripts": {
-  "dev": "node index.js",
-  "start": "node index.js"
-},
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "main": "index.js",
+  "scripts": {
+    "start": "vercel dev"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
