@@ -6,18 +6,12 @@ const router = express.Router();
 router.post('/', async (req, res) => {
     const secret = req.headers['x-secret-key'] || req.body.secret;
     if (secret !== process.env.MY_SECRET_TRIGGER_KEY) {
-        return res.status(401).json({
-            error: 'Unauthorized'
-        });
+        return res.status(401).json({ error: 'Unauthorized' });
     }
 
-    const {
-        prompt
-    } = req.body;
+    const { prompt } = req.body;
     if (!process.env.OPENROUTER_API_KEY) {
-        return res.status(500).json({
-            error: 'Missing API key'
-        });
+        return res.status(500).json({ error: 'Missing API key' });
     }
 
     try {
@@ -30,10 +24,7 @@ router.post('/', async (req, res) => {
             body: JSON.stringify({
                 model: 'google/gemma-3-27b-it:free',
                 max_tokens: 1024,
-                messages: [{
-                    role: 'user',
-                    content: prompt
-                }],
+                messages: [{ role: 'user', content: prompt }],
             }),
         });
 

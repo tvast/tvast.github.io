@@ -6,8 +6,7 @@
       <button @click="setTheme('pink')">Pink</button>
     </header>
 
-    <Timeline />
-    <MasonryBoard />
+    
   </div>
 </template>
 
