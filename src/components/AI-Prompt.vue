@@ -57,7 +57,7 @@ export default {
       this.loading = true;
 
       try {
-       const response = await fetch('https://tvast-github-io.vercel.app/api/ask', {
+       const response = await fetch('https://tvast-github-io.vercel.app/c', {
     method: 'POST',
     headers: {
         'Content-Type': 'application/json',
