@@ -48,6 +48,63 @@ Mon profil unique combine :
 - **GitHub** : [https://github.com/tvast](https://github.com/tvast)
 - **Email** : theophile.vast@gmail.com
 
+# Greetings
+
+I am so happy to invite you on this amazing journey that web development is. 🌌 
+
+Dear student, I encourage you to bring all your strength, feelings, and hope into answering this simple yet profound question:
+
+---
+
+**Choose your path:**
+
+- **Orion 🧱**
+- **Cassiopeia 🌌**
+
+---
+
+Each choice represents a unique journey. I’m certain you’ll learn so much, even in the moments you pause during this humble philosophical training.
+
+Now, let’s take a quick overview of what you will discover through this honorable course:
+
+- [ ] **Funny Resume:** A creative showcase of individuality with clever design and dynamic interactivity.
+- [ ] **Idiomatic Game:** Merge language and logic in a gamified exploration of coding principles.
+- [ ] **Landing on the Moon:** Reach milestones, like deploying your first project live—an exhilarating achievement!
+- [ ] **Message to the Universe:** Connect the web with the world beyond through APIs or a digital message board.
+- [ ] **Hide and Seek:** Playfully explore state management and interactivity—revealing and concealing elements dynamically.
+- [ ] **Space_**: A limitless canvas for creativity using CSS animations, Three.js, or parallax effects.
+- [ ] **So Someone Hiding?**
+
+🔜 *And many more surprises await!*
+
+---
+
+### A Thought to Carry:
+
+“Code is a way of learning, not the learnable itself. The glass is often more expensive than the wine.”  
+This profound reminder encourages us to focus on the essence of our craft—creativity, logic, and innovation—rather than becoming fixated on the tools themselves.
+
+---
+
+### Your Mission
+
+Click below to choose your galaxy and begin your cosmic web development odyssey:
+
+- **[Orion](#)**
+- **[Cassiopeia](#)**
+
+---
+
+### A Song to Kick Things Off:  
+**Teleportation – Dirtyphonics** 🎵  
+Let its energy fuel your exploration as you embark on this incredible journey.
+
+---
+
+> Remember, every line of code is a star in the infinite digital cosmos. Together, we’ll create constellations that light up the web.
+
+🌠 *Let’s explore your galaxy!*
+
 ## Method Overview
 
 This method is designed to help young students master skills by combining professional discipline with fearless experimentation.
