@@ -11,11 +11,10 @@
 
 <script>
 import * as THREE from 'three';
-import AIPrompt from './AIPrompt.vue';
 import Cursor from './Cursor.vue';
 export default {
     name: 'DonutsScene',
-    components: { AIPrompt, Cursor },
+    components: { Cursor },
     data() {
         return {
             donuts: [],

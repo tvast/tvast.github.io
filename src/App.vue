@@ -56,7 +56,7 @@ onMounted(() => {
   }
   50% {
     opacity: 1;
-    transform: scale(5.2);
+    transform: scale(3.2);
   }
   100% {
     opacity: 0;

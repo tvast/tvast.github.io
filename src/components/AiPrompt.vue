@@ -18,6 +18,7 @@
           <button @click="setPrompt('Write a short poem about technology.')">Poem</button>
           <button @click="setPrompt('Help me prepare a quick elevator pitch.')">Elevator Pitch</button>
         </div>
+    
 
         <form @submit.prevent="submitPromptHandler" v-if="isAuthenticated">
           <span class="prompt">>
@@ -33,11 +34,10 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted, onBeforeUnmount, nextTick } from "vue";
 import { getApp } from "firebase/app";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { eventBus } from "../eventBus";
-
 const app = getApp();
 const functions = getFunctions(app, "europe-west1");
 const chatWithAI = httpsCallable(functions, "chatWithAI");
@@ -51,7 +51,14 @@ const isAuthenticated = ref(true);
 function toggleChat() {
   open.value = !open.value;
 }
-
+    const messages=[
+        "Hello!",
+        "How can I help you?",
+        "This is a test message.",
+        "More messages...",
+        "Keep scrolling!",
+        "Last message."
+      ]
 function setPrompt(text) {
   input.value = text;
   submitPromptHandler();
@@ -211,5 +218,47 @@ input {
 
 .suggestions button:hover {
   background: rgba(0, 255, 0, 0.2);
+}
+
+.chat-container {
+  position: fixed;
+  bottom: 100px; /* adjust as needed */
+  right: 1.5rem;
+  width: 300px;
+  max-height: 400px;
+  background: #222;
+  color: #0f0;
+  border-radius: 10px;
+  overflow-y: auto;
+  padding: 1rem;
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #555 #222; /* Firefox */
+}
+
+/* Scrollbar style for Webkit browsers */
+.chat-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.chat-container::-webkit-scrollbar-track {
+  background: #222;
+}
+
+.chat-container::-webkit-scrollbar-thumb {
+  background-color: #555;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+/* Highlight scrollbar on hover */
+.chat-container:hover::-webkit-scrollbar-thumb {
+  background-color: #0f0; /* glowing green effect */
+}
+
+/* Chat messages */
+.chat-message {
+  margin-bottom: 0.5rem;
+  font-family: 'Courier New', monospace;
 }
 </style>

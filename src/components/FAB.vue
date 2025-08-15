@@ -17,7 +17,6 @@ export default {
     }
   }
 }
-
 </script>
 
 <style scoped>
@@ -28,106 +27,48 @@ export default {
   z-index: 1000;
 }
 
-/* Glass effect button */
+/* Skeuomorphic metal button */
 .fab {
   position: relative;
   width: 70px;
   height: 70px;
-  background: rgba(0, 255, 0, 0.2);
-  backdrop-filter: blur(10px);
-  border: 2px solid rgba(0, 255, 0, 0.5);
+  background: linear-gradient(145deg, #b0b0b0, #7a7a7a);
+  border: 2px solid #5a5a5a;
   border-radius: 50%;
   font-size: 2rem;
-  color: #0f0;
+  color: #222;
   cursor: pointer;
-  box-shadow: 0 0 20px rgba(0, 255, 0, 0.6);
+  box-shadow: 5px 5px 15px #4a4a4a, -5px -5px 15px #d0d0d0;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: 0.3s;
+  transition: all 0.2s ease;
 }
 
 .fab:hover {
-  transform: scale(1.2);
-  box-shadow: 0 0 30px rgba(0, 255, 0, 0.9);
+  background: linear-gradient(145deg, #9a9a9a, #6a6a6a);
+  box-shadow: inset 2px 2px 5px #4a4a4a, inset -2px -2px 5px #d0d0d0;
+  transform: scale(1.1);
 }
 
-/* Tooltip / incentive text */
+/* Tooltip */
 .tooltip {
   position: absolute;
-  bottom: 100%; /* au-dessus du bouton */
+  bottom: 100%;
   left: 50%;
   transform: translateX(-50%) translateY(-0.5rem);
-  background: rgba(0, 255, 0, 0.2);
-  backdrop-filter: blur(6px);
-  color: #0f0;
+  background: #e0e0e0;
+  color: #333;
   padding: 0.3rem 0.6rem;
   font-size: 0.8rem;
   border-radius: 6px;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.3);
   opacity: 0;
   pointer-events: none;
-  transition: 0.3s;
+  transition: all 0.3s ease;
   white-space: nowrap;
 }
 
-/* Tooltip apparaît au hover */
-.fab:hover .tooltip {
-  opacity: 1;
-  transform: translateX(-50%) translateY(-1rem);
-}
-</style>
-
-<style scoped>
-.chat-button-wrapper {
-  position: fixed;
-  bottom: 1.5rem;
-  right: 1.5rem;
-  z-index: 1000;
-}
-
-/* Glass effect button */
-.fab {
-  position: relative;
-  width: 70px;
-  height: 70px;
-  background: rgba(0, 255, 0, 0.2);
-  backdrop-filter: blur(10px);
-  border: 2px solid rgba(0, 255, 0, 0.5);
-  border-radius: 50%;
-  font-size: 2rem;
-  color: #0f0;
-  cursor: pointer;
-  box-shadow: 0 0 20px rgba(0, 255, 0, 0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: 0.3s;
-}
-
-.fab:hover {
-  transform: scale(1.2);
-  box-shadow: 0 0 30px rgba(0, 255, 0, 0.9);
-}
-
-/* Tooltip / incentive text */
-.tooltip {
-  position: absolute;
-  bottom: 100%; /* au-dessus du bouton */
-  left: 50%;
-  transform: translateX(-50%) translateY(-0.5rem);
-  background: rgba(0, 255, 0, 0.2);
-  backdrop-filter: blur(6px);
-  color: #0f0;
-  padding: 0.3rem 0.6rem;
-  font-size: 0.8rem;
-  border-radius: 6px;
-  opacity: 0;
-  pointer-events: none;
-  transition: 0.3s;
-  white-space: nowrap;
-}
-
-/* Tooltip apparaît au hover */
 .fab:hover .tooltip {
   opacity: 1;
   transform: translateX(-50%) translateY(-1rem);
