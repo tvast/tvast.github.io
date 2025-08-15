@@ -1,0 +1,158 @@
+{
+  "personal": {
+    "name": "Theophile Vast",
+    "title": "Web Dev ✦ UI/UX ✦ Prompt Engineer Junior",
+    "location": "Montpellier, Occitanie, France",
+    "contact": {
+      "phone": "+33 6 98 75 82 26",
+      "email": "theophile.vast@gmail.com",
+      "linkedin": "https://www.linkedin.com/in/theophile-vast",
+      "portfolio": "https://tvast.github.io/portfolio2k20"
+    },
+    "summary": "Lead dev avec background DevOps. Spécialisé en Vue.js, CI/CD, Docker, et automatisation d'infrastructure."
+  },
+  "skills": {
+    "technical": [
+      "Vue.js",
+      "CI/CD",
+      "Docker",
+      "Intelligence artificielle (IA)",
+      ".NET Framework"
+    ],
+    "soft": ["Restauration fine"],
+    "languages": [
+      { "name": "Français", "level": "Native or Bilingual" },
+      { "name": "Anglais", "level": "Full Professional" },
+      { "name": "Espagnol", "level": "Professional Working" },
+      { "name": "Italien", "level": "Limited Working" }
+    ]
+  },
+  "achievements": {
+    "certifications": ["OSPG certification"],
+    "awards": ["Hackathon Nao"]
+  },
+  "experience": [
+    {
+      "company": "Mint Mobile",
+      "role": "Senior Software Developer",
+      "location": "Montpellier",
+      "period": "janvier 2025 - mars 2025",
+      "tasks": []
+    },
+    {
+      "company": "Accenture",
+      "role": "Architecte de données",
+      "location": "Lille",
+      "period": "septembre 2023 - avril 2024",
+      "tasks": []
+    },
+    {
+      "company": "Accenture",
+      "role": "Web Developer Specialist",
+      "location": "Lille",
+      "period": "janvier 2022 - septembre 2023",
+      "tasks": [
+        "SAP Cloud Commerce (Hybris), Vue 2, SCSS, VueX",
+        "Refonte UX/UI avec Algolia",
+        "Formations IA, Blockchain, ML",
+        "RESTful APIs & intégration Algolia",
+        "Code review"
+      ]
+    },
+    {
+      "company": "Claranet France",
+      "role": "Développeur Full Stack",
+      "location": "Lille",
+      "period": "juin 2021 - décembre 2021",
+      "tasks": [
+        "Vue 2 en TypeScript, Angular V12",
+        "Sockets.io, GRPC",
+        "Optimisation GitLab DevOps pipeline"
+      ]
+    },
+    {
+      "company": "Leihia",
+      "role": "Lead Developer",
+      "location": "Lille",
+      "period": "octobre 2020 - juin 2021",
+      "tasks": [
+        "App Quasar from scratch",
+        "Bot reconnaissance vocale",
+        "ML/NLP, GitLab CI/CD",
+        "Déploiement staging & prod (Ubuntu)"
+      ]
+    },
+    {
+      "company": "Amadeus",
+      "role": "Fullstack software engineer",
+      "location": "Madrid",
+      "period": "décembre 2019 - mai 2020",
+      "tasks": [
+        "Prototype JS (React, Vue, Angular)",
+        "Dashboard monitoring (Adobe, CSV, SAP, Apigee)",
+        "Blog writing, public speaking"
+      ]
+    },
+    {
+      "company": "IBM Interactive",
+      "role": "Front end software engineer",
+      "location": "Paris",
+      "period": "janvier 2019 - juillet 2019",
+      "tasks": [
+        "App crédit bancaire (framework privé)",
+        "Méthodologie Agile Scrum",
+        "JavaScript, Swagger, Java 8, Cucumber"
+      ]
+    },
+    {
+      "company": "Institut français",
+      "role": "VIA Ingénieur web",
+      "location": "Madrid",
+      "period": "novembre 2016 - décembre 2018",
+      "tasks": [
+        "Jeux éducatifs",
+        "Plateforme e-learning",
+        "Dév. site culturel (WordPress, Moodle, HTML5, CSS3, JS)"
+      ]
+    },
+    {
+      "company": "VICE Media",
+      "role": "Assistant traffic Manager",
+      "location": "",
+      "period": "décembre 2013 - juin 2014",
+      "tasks": [
+        "Trafic pub sur 10k sites premium",
+        "Facturation, optimisation média",
+        "DFP premium"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "school": "SUP'Internet",
+      "degree": "Bachelor's degree",
+      "field": "Développement informatique",
+      "period": "2011 - 2013"
+    },
+    {
+      "school": "Udemy",
+      "field": "Développeur Node.js / React.js",
+      "year": "2020"
+    },
+    {
+      "school": "IFOCOP",
+      "field": "JavaScript Fullstack",
+      "year": "2016"
+    },
+    {
+      "school": "Udacity",
+      "field": "Front-end Framework",
+      "year": "2018"
+    },
+    {
+      "school": "Lycée Jean Pierre Vernant",
+      "degree": "Baccalauréat série S, option cinéma",
+      "period": "2010 - 2011"
+    }
+  ]
+}
