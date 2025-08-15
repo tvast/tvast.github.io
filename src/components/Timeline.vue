@@ -1,212 +1,155 @@
 <template>
-  <div v-if="timelineData.length" :class="['timeline-container', currentEvent.era]">
-    <!-- Timeline Header -->
-    <div class="timeline-header">
-      <h2 class="timeline-title">Career Timeline</h2>
-      <p class="timeline-subtitle">Professional experiences and roles</p>
-    </div>
-
-    <!-- Timeline Content -->
-    <div class="timeline-content-wrapper">
-      <div class="timeline-content">
-        <div
-          class="event-icon"
-          :class="{ fadeOut: isFading }"
-          v-html="currentEventIcon"
-        ></div>
-        <div class="event-year" :class="{ fadeOut: isFading }">
-          {{ currentEvent.date || currentEvent.year }}
-        </div>
-        <div class="event-company" :class="{ fadeOut: isFading }">
-          {{ currentEvent.company }}
-        </div>
-        <div class="event-description" :class="{ fadeOut: isFading }">
-          <ul v-if="currentEvent.description && currentEvent.description.length">
-            <li v-for="(item, idx) in currentEvent.description" :key="idx">
-              {{ item }}
-            </li>
-          </ul>
-          <span v-else>{{ currentEvent.title || '' }}</span>
+  <div class="timeline-carousel">
+    <Hoopalong />
+    <div v-if="timeline && timeline.length" class="carousel-wrapper">
+      <button class="nav-btn left" @click="scroll(-1)">‹</button>
+      <div ref="carousel" class="carousel">
+        <div v-for="(item, index) in timeline" :key="index" class="carousel-card">
+          <div class="icon">{{ item.icon }}</div>
+          <div class="content">
+            <h3 class="title">{{ item.title }}</h3>
+            <p class="subtitle">
+              {{ item.company || item.institution || '' }} - {{ item.date || '' }}
+            </p>
+            <ul v-if="item.description && item.description.length">
+              <li v-for="(desc, i) in item.description" :key="i">{{ desc }}</li>
+            </ul>
+          </div>
         </div>
       </div>
-    </div>
-
-    <!-- Timeline Slider -->
-    <div class="slider-container">
-      <input
-        type="range"
-        class="timeline-slider"
-        min="0"
-        :max="timelineData.length - 1"
-        v-model.number="currentIndex"
-        @input="onSliderInput"
-      />
-      <div class="slider-track">
-        <div
-          v-for="(event, i) in timelineData"
-          :key="i"
-          class="tick"
-          :class="{ active: i === currentIndex }"
-          :style="{ left: `${(i / (timelineData.length - 1)) * 100}%` }"
-        ></div>
-      </div>
-
-      <!-- <div class="year-labels">
-        <span
-          v-for="(event, idx) in visibleLabels"
-          :key="idx"
-          class="year-label"
-          :class="{ active: (idx + visibleStart) === currentIndex }"
-          :style="{ left: `${((idx + visibleStart) / (timelineData.length - 1)) * 100}%` }"
-        >
-          {{ event.date || event.year }}
-        </span>
-      </div> -->
-
-      <div class="progress-fill" :style="{ width: progress + '%' }"></div>
+      <button class="nav-btn right" @click="scroll(1)">›</button>
     </div>
   </div>
 </template>
 
 <script>
+import Hoopalong from './Hoopalong.vue';
+
 export default {
   name: "Timeline",
   props: {
-    cv: { type: Object, required: true }
+    cv: { type: Array, required: true },
+  }, components: {
+    Hoopalong
   },
   data() {
     return {
-      currentIndex: 0,
-      autoPlayInterval: null,
-      isFading: false,
-      visibleStart: 0
+      timeline: [],
     };
   },
-  computed: {
-    timelineData() {
-      const flattened = [];
-      this.cv.experiences.forEach(exp => {
-        if (exp.roles) {
-          exp.roles.forEach(role => {
-            flattened.push({
-              ...role,
-              company: exp.company,
-              era: this.getEra(role.date),
-              icon: this.getIcon(role.title)
-            });
-          });
-        } else {
-          flattened.push({
-            ...exp,
-            era: this.getEra(exp.date),
-            icon: this.getIcon(exp.title)
-          });
-        }
-      });
-      return flattened;
-    },
-    currentEvent() {
-      return this.timelineData[this.currentIndex] || {};
-    },
-    currentEventIcon() {
-      return this.currentEvent.icon
-        ? `<i class="fa-solid ${this.currentEvent.icon}"></i>`
-        : "<i class='fa-solid fa-briefcase'></i>";
-    },
-    progress() {
-      return this.timelineData.length
-        ? (this.currentIndex / (this.timelineData.length - 1)) * 100
-        : 0;
-    },
-    visibleLabels() {
-      const windowSize = 5;
-      const start = Math.max(0, this.currentIndex - Math.floor(windowSize / 2));
-      const end = Math.min(this.timelineData.length, start + windowSize);
-      this.visibleStart = start;
-      return this.timelineData.slice(start, end);
-    }
+  created() {
+    this.loadTimeline();
   },
   methods: {
-    getEra(date) {
-      if (!date) return "era-modern";
-      const year = parseInt(date.slice(-4));
-      if (year < 2000) return "era-early-web";
-      if (year < 2005) return "era-dot-com";
-      if (year < 2010) return "era-social-media";
-      if (year < 2015) return "era-mobile";
-      if (year < 2025) return "era-modern";
-      return "era-future-tech";
+    loadTimeline() {
+      this.timeline = this.cv;
     },
-    getIcon(title) {
-      if (!title) return "fa-briefcase";
-      if (/developer/i.test(title)) return "fa-code";
-      if (/architect/i.test(title)) return "fa-brain";
-      if (/manager/i.test(title)) return "fa-users";
-      if (/engineer/i.test(title)) return "fa-cogs";
-      return "fa-briefcase";
+    scroll(direction) {
+      const carousel = this.$refs.carousel;
+      const cardWidth = carousel.children[0].offsetWidth + 16; // includes gap
+      carousel.scrollBy({
+        left: direction * cardWidth,
+        behavior: 'smooth',
+      });
     },
-    updateTimeline(index) {
-      if (index === this.currentIndex) return;
-      this.isFading = true;
-      setTimeout(() => {
-        this.currentIndex = index;
-        this.isFading = false;
-      }, 300);
-    },
-    onSliderInput() { this.stopAutoPlay(); },
-    startAutoPlay() {
-      this.stopAutoPlay();
-      this.autoPlayInterval = setInterval(() => {
-        const nextIndex = (this.currentIndex + 1) % this.timelineData.length;
-        this.updateTimeline(nextIndex);
-      }, 4000);
-    },
-    stopAutoPlay() {
-      if (this.autoPlayInterval) clearInterval(this.autoPlayInterval);
-      this.autoPlayInterval = null;
-    }
   },
-  mounted() { setTimeout(() => this.startAutoPlay(), 2000); },
-  beforeUnmount() { this.stopAutoPlay(); }
 };
 </script>
 
 <style scoped>
-* { margin:0; padding:0; box-sizing:border-box; }
-body { }
-
-.timeline-container {
-  font-family: 'Roboto'  , sans-serif !important;
-  width: 100%;
-  background: rgba(255,255,255,0.95);
-  border-radius: 20px;
-  padding: 4rem 2rem;
-  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
-  border: 1px solid rgba(226,232,240,0.8);
-  backdrop-filter: blur(10px);
-  text-align: center;
-}
-
-.timeline-content-wrapper {
-  width: 100%;
+.timeline-carousel {
   display: flex;
-  overflow-x: hidden; /* hide overflowing content */
-  justify-content: center; /* center the active panel */
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  position: relative;
+  width: 100%;
 }
 
-.timeline-container {
-      min-width: -webkit-fill-available;
-  flex: 0 0 100%; /* make each panel full width of container */
-  max-width: 100%; /* prevent shrinking */
-  padding: 2rem;
-  margin: 0; /* remove left/right spacing */
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.carousel-wrapper {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
+.carousel {
+  display: flex;
+  overflow-x: auto;
+  gap: 1rem;
+  scroll-behavior: smooth;
+  padding: 1rem 0;
+}
+
+.carousel-card {
+  flex: 0 0 300px;
+  background: rgba(0, 255, 128, 0.2);
+  backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  padding: 1rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.carousel-card:hover {
+  transform: scale(1.05);
+}
+
+.icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin: 0.2rem 0;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+ul {
+  padding-left: 1rem;
+}
+
+li {
+  margin-bottom: 0.3rem;
+}
+
+.empty-message {
+  color: #999;
+  font-style: italic;
+}
+
+/* Navigation buttons */
+.nav-btn {
+  background: rgba(0, 255, 128, 0.3);
+  border: none;
+  border-radius: 50%;
+  font-size: 2rem;
+  width: 2.5rem;
+  height: 2.5rem;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(5px);
+  transition: transform 0.2s ease;
 }
 
-/* Add your previous slider, ticks, year-label, era, and responsive CSS here */
+.nav-btn:hover {
+  transform: scale(1.1);
+}
 
+.nav-btn.left {
+  margin-right: 0.5rem;
+}
+
+.nav-btn.right {
+  margin-left: 0.5rem;
+}
 </style>

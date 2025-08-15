@@ -3,7 +3,6 @@ import vue from '@vitejs/plugin-vue'
 
 // Replace <repo-name> with your GitHub repository name
 export default defineConfig({
-  base: '/tvast.github.io/', 
   plugins: [vue()],
   build: {
     outDir: 'docs', // default, but you can keep it explicit
