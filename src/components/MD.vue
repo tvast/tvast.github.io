@@ -11,7 +11,7 @@ const readmeHtml = ref("");
 onMounted(async () => {
   try {
     const res = await fetch(
-      "https://raw.githubusercontent.com/tvast/tvast.github.io/main/README.md"
+      "https://github.com/tvast/tvast.github.io/blob/gh-pages/README.md"
     );
     const md = await res.text();
     readmeHtml.value = marked(md);
