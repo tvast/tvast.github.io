@@ -6,9 +6,10 @@
     <div v-else>
       <AnimatedLogo />
 <Donuts/>
+<Thorus />
       <AiPrompt />
       <Landing />
-
+<Marketing />
     </div>
   </div>
 </template>
@@ -21,6 +22,8 @@ import Landing from "./components/Landing.vue";
 import Donuts from "./components/Donuts.vue";
 import DonutsAnimated from "./components/DonutsAnimated.vue";
 import AnimatedDonutsStyle from "./components/AnimatedDonutsStyle.vue";
+import Thorus from "./components/Thorus.vue";
+import Marketing from "./components/Marketing.vue";
 
 const isLoaded = ref(false);
 const showLogo = ref(true);

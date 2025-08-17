@@ -17,15 +17,18 @@
     "firebase": "^12.1.0",
     "firebase-admin": "^11.11.1",
     "firebase-functions": "^4.9.0",
+    "gsap": "^3.13.0",
     "marked": "^16.1.2",
     "node-fetch": "^3.3.2",
+    "simplex-noise": "^4.0.3",
     "three": "^0.179.1",
     "vue": "^3.5.18"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.1",
     "vite": "^7.1.2"
-  },  "workspaces": [
+  },
+  "workspaces": [
     "lib/cr1bl3"
   ]
 }

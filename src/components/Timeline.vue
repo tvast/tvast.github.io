@@ -1,6 +1,9 @@
 <template>
   <div class="timeline-carousel">
-    <Hoopalong />
+    <!-- Hoopalong background -->
+    <Hoopalong class="background" />
+
+    <!-- Timeline foreground -->
     <div v-if="timeline && timeline.length" class="carousel-wrapper">
       <button class="nav-btn left" @click="scroll(-1)">‹</button>
       <div ref="carousel" class="carousel">
@@ -29,7 +32,8 @@ export default {
   name: "Timeline",
   props: {
     cv: { type: Array, required: true },
-  }, components: {
+  },
+  components: {
     Hoopalong
   },
   data() {
@@ -46,6 +50,8 @@ export default {
     },
     scroll(direction) {
       const carousel = this.$refs.carousel;
+      if (!carousel || !carousel.children.length) return;
+
       const cardWidth = carousel.children[0].offsetWidth + 16; // includes gap
       carousel.scrollBy({
         left: direction * cardWidth,
@@ -58,12 +64,23 @@ export default {
 
 <style scoped>
 .timeline-carousel {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1rem;
-  position: relative;
+  padding: 2rem 1rem;
   width: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* Hoopalong background fills viewport */
+.background {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1; /* push behind timeline */
 }
 
 .carousel-wrapper {
@@ -71,6 +88,7 @@ export default {
   align-items: center;
   width: 100%;
   position: relative;
+  z-index: 1; /* keep timeline above */
 }
 
 .carousel {
@@ -139,6 +157,7 @@ li {
   justify-content: center;
   backdrop-filter: blur(5px);
   transition: transform 0.2s ease;
+  z-index: 2;
 }
 
 .nav-btn:hover {
