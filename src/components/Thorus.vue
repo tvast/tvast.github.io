@@ -6,25 +6,27 @@ import { ImprovedNoise } from 'three/examples/jsm/math/ImprovedNoise.js'
 let scene, camera, renderer, analyser
 const noise = new ImprovedNoise()
 const donuts = []
-const donutCount = 5
+const donutCount = 3
 const audioReady = ref(false)
 let audio, listener
-
+const isPlaying = ref(false)
+let idleAnimating = true
 onMounted(() => {
   initScene()
+  idleAnimate()
   window.addEventListener('resize', onWindowResize)
 })
 
 function initScene() {
-     // Scene & Camera
-      scene = new THREE.Scene();
-      camera = new THREE.PerspectiveCamera(
-        75,
-        window.innerWidth / window.innerHeight,
-        0.1,
-        100
-      );
-    camera.position.z = 8;
+  // Scene & Camera
+  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(
+    75,
+    window.innerWidth / window.innerHeight,
+    0.1,
+    100
+  );
+  camera.position.z = 8;
 
   scene.add(new THREE.AmbientLight(0xffffff, 0.5))
 
@@ -85,11 +87,22 @@ function initScene() {
 //   }
 // }
 
-function startAudio() {
+
+function toggleAudio() {
   if (!audioReady.value) return
-  audio.play()
-  animate()
+  if (isPlaying.value) {
+    audio.pause()
+    isPlaying.value = false
+    idleAnimating = true
+    idleAnimate() // back to idle render
+  } else {
+    audio.play()
+    isPlaying.value = true
+    idleAnimating = false
+    animate() // switch to audio animation
+  }
 }
+
 
 // function createDonuts() {
 
@@ -194,11 +207,11 @@ function createDonuts() {
 
   for (let i = 0; i < donutCount; i++) {
     const geometry = new THREE.TorusGeometry(
-  Math.random() * 1.5 + 1.0, // outer radius bigger
-  0.4,                       // tube thickness
-  32,
-  100
-);
+      Math.random() * 1.5 + 1.0, // outer radius bigger
+      0.4,                       // tube thickness
+      32,
+      100
+    );
     geometry.originalPositions = new Float32Array(geometry.attributes.position.array);
 
     const material = new THREE.ShaderMaterial({
@@ -227,53 +240,68 @@ function createDonuts() {
     donuts.push(donut);
   }
 }
-  function animate() {
-    requestAnimationFrame(animate)
 
-    let bass = 0
-    let tre = 0
-    if (analyser) {
-      bass = analyser.getAverageFrequency() * 0.01
-      tre = analyser.getAverageFrequency() * 0.002
+// 🌀 idle loop (just show scene, no audio effects)
+function idleAnimate() {
+  if (!idleAnimating) return
+  requestAnimationFrame(idleAnimate)
+  renderer.render(scene, camera)
+}
+function animate() {
+  requestAnimationFrame(animate)
+
+  let bass = 0
+  let tre = 0
+  if (analyser) {
+    bass = analyser.getAverageFrequency() * 0.01
+    tre = analyser.getAverageFrequency() * 0.002
+  }
+
+  donuts.forEach(donut => {
+    const posAttr = donut.geometry.attributes.position
+    const original = donut.geometry.originalPositions
+
+    for (let i = 0; i < posAttr.count; i++) {
+      const ix = i * 3
+      const iy = ix + 1
+      const iz = ix + 2
+
+      posAttr.array[ix] = original[ix] + noise.noise(original[ix], original[iy], performance.now() * 0.001) * bass
+      posAttr.array[iy] = original[iy] + noise.noise(original[iy], original[iz], performance.now() * 0.001) * tre
+      posAttr.array[iz] = original[iz] + noise.noise(original[iz], original[ix], performance.now() * 0.001) * bass
     }
 
-    donuts.forEach(donut => {
-      const posAttr = donut.geometry.attributes.position
-      const original = donut.geometry.originalPositions
+    posAttr.needsUpdate = true
+    donut.rotation.x += donut.userData.speed
+    donut.rotation.y += donut.userData.speed
+  })
 
-      for (let i = 0; i < posAttr.count; i++) {
-        const ix = i * 3
-        const iy = ix + 1
-        const iz = ix + 2
+  renderer.render(scene, camera)
+}
 
-       posAttr.array[ix] = original[ix] + noise.noise(original[ix], original[iy], performance.now() * 0.001) * bass
-          posAttr.array[iy] = original[iy] + noise.noise(original[iy], original[iz], performance.now() * 0.001) * tre
-          posAttr.array[iz] = original[iz] + noise.noise(original[iz], original[ix], performance.now() * 0.001) * bass
-      }
-
-      posAttr.needsUpdate = true
-      donut.rotation.x += donut.userData.speed
-      donut.rotation.y += donut.userData.speed
-    })
-
-    renderer.render(scene, camera)
-  }
-
-  function onWindowResize() {
-    camera.aspect = window.innerWidth / window.innerHeight
-    camera.updateProjectionMatrix()
-    renderer.setSize(window.innerWidth, window.innerHeight)
-  }
+function onWindowResize() {
+  camera.aspect = window.innerWidth / window.innerHeight
+  camera.updateProjectionMatrix()
+  renderer.setSize(window.innerWidth, window.innerHeight)
+}
 </script>
 
 <template>
   <div id="out" class="w-full h-screen relative"></div>
-    <!-- Bouton Play -->
-    <button v-if="audioReady" class="play-button" @click="startAudio">
-      ▶️ Play
-    </button>
-  <div id="out"></div>
-</template>
+
+  <!-- Loading overlay -->
+  <div v-if="!audioReady" class="absolute inset-0 flex items-center justify-center bg-black text-white z-50">
+    <div class="loader"></div>
+    <p class="ml-4 text-xl">Loading...</p>
+  </div>
+
+  <!-- Play / Pause Button -->
+  <button v-else
+    class="play-button absolute bottom-6 left-1/2 transform -translate-x-1/2 px-6 py-3 rounded-2xl bg-white text-black font-bold shadow-lg hover:bg-gray-200"
+    @click="toggleAudio">
+    {{ isPlaying ? "⏸️ Pause" : "▶️ Play" }}
+  </button>
+</template>z
 
 <style scoped>
 .scene-container {
@@ -303,24 +331,60 @@ function createDonuts() {
   cursor: pointer;
   box-shadow: 0 8px 15px rgba(255, 182, 193, 0.4);
   transition: all 0.3s ease;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 /* Hover kawaii sparkle effect */
 .play-button:hover {
   transform: translate(-50%, -50%) scale(1.15) rotate(-2deg);
-  box-shadow: 0 12px 20px rgba(255, 182, 193, 0.6), 0 0 10px rgba(255,255,255,0.5) inset;
+  box-shadow: 0 12px 20px rgba(255, 182, 193, 0.6), 0 0 10px rgba(255, 255, 255, 0.5) inset;
   background: linear-gradient(135deg, #fbc2eb, #a18cd1, #ffdde1);
 }
 
 /* Cute bouncing animation */
 @keyframes bounce {
-  0%, 20%, 50%, 80%, 100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
-  40% { transform: translate(-50%, -55%) scale(1.1) rotate(-3deg); }
-  60% { transform: translate(-50%, -52%) scale(1.05) rotate(2deg); }
+
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translate(-50%, -50%) scale(1) rotate(0deg);
+  }
+
+  40% {
+    transform: translate(-50%, -55%) scale(1.1) rotate(-3deg);
+  }
+
+  60% {
+    transform: translate(-50%, -52%) scale(1.05) rotate(2deg);
+  }
 }
 
 .play-button {
   animation: bounce 2s infinite;
+}
+
+.play-button {
+  transition: all 0.2s ease-in-out;
+}
+
+.loader {
+  border: 6px solid #f3f3f3;
+  border-top: 6px solid #00ffcc;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 </style>

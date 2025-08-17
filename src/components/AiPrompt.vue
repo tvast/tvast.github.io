@@ -8,7 +8,7 @@
 
     <!-- Chat Window -->
     <div v-if="open" class="chat-window">
-      <div class="terminal">
+      <div ref="terminal" class="terminal">
         <div v-for="(line, i) in history" :key="i" class="line">
           <span class="prompt">{{ line.isUser ? '> ' : '' }}</span>{{ line.text }}
         </div>
@@ -18,11 +18,9 @@
           <button @click="setPrompt('Write a short poem about technology.')">Poem</button>
           <button @click="setPrompt('Help me prepare a quick elevator pitch.')">Elevator Pitch</button>
         </div>
-    
 
         <form @submit.prevent="submitPromptHandler" v-if="isAuthenticated">
-          <span class="prompt">>
-          </span>
+          <span class="prompt">></span>
           <input v-model="input" placeholder="Type your question..." autofocus />
           <button type="submit" :disabled="loading || !input.trim()" style="display:none;">Send</button>
         </form>
@@ -38,39 +36,32 @@ import { ref, onMounted, onBeforeUnmount, nextTick } from "vue";
 import { getApp } from "firebase/app";
 import { getFunctions, httpsCallable } from "firebase/functions";
 import { eventBus } from "../eventBus";
+
 const app = getApp();
 const functions = getFunctions(app, "europe-west1");
 const chatWithAI = httpsCallable(functions, "chatWithAI");
-
+const terminal = ref(null);
 const input = ref("");
 const history = ref([]);
 const loading = ref(false);
 const open = ref(false);
 const isAuthenticated = ref(true);
 
+
 function toggleChat() {
   open.value = !open.value;
 }
-    const messages=[
-        "Hello!",
-        "How can I help you?",
-        "This is a test message.",
-        "More messages...",
-        "Keep scrolling!",
-        "Last message."
-      ]
+
 function setPrompt(text) {
   input.value = text;
   submitPromptHandler();
 }
 
 function feedFunnyText() {
-  // Example prompt for AI
   const prompts = [
     "Write a short and funny story about Théophile Vast.",
     "Make a humorous comment about Alien Computing."
   ];
-  // Pick one randomly for variety
   const prompt = prompts[Math.floor(Math.random() * prompts.length)];
   setPrompt(prompt);
 }
@@ -162,19 +153,19 @@ function scrollToBottom() {
   right: 1.5rem;
   width: 320px;
   max-height: 400px;
+  height: 400px; /* make sure the inner terminal knows the height */
   background: rgba(17, 17, 17, 0.8);
   backdrop-filter: blur(5px);
   color: #0f0;
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
-  overflow: hidden;
-  z-index: 999;
+  overflow: hidden; /* don't scroll the outer div */
 }
 
 .terminal {
   padding: 1rem;
   height: 100%;
-  overflow-y: auto;
+  overflow-y: auto; /* THIS allows scrolling */
   font-family: 'Courier New', monospace;
   display: flex;
   flex-direction: column;

@@ -1,17 +1,18 @@
 <template>
-  <div class="readme-container" v-html="readmeHtml"></div>
-
-  <div class="lang-switcher">
+    <div class="lang-switcher">
     <button @click="lang = 'fr'">🇫🇷 Français</button>
     <button @click="lang = 'en'">🇬🇧 English</button>
   </div>
+  <div class="readme-container" v-html="readmeHtml"></div>
+
+
 </template>
 
 <script setup>
 import { ref, watch, onMounted } from "vue";
 import { marked } from "marked";
 
-const lang = ref("fr"); // default language
+const lang = ref("en"); // ✅ default to English
 const readmeHtml = ref("");
 
 async function loadReadme(language) {
