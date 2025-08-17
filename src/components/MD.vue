@@ -16,7 +16,7 @@ const lang = ref("en"); // ✅ default to English
 const readmeHtml = ref("");
 
 async function loadReadme(language) {
-  const file = language === "fr" ? "../../README_FR.md" : "../../README_EN.md";
+  const file = language === "fr" ? "../../_FR.md" : "../../_EN.md";
   try {
     const res = await fetch(file);
     const md = await res.text();
