@@ -156,45 +156,49 @@ function generateColor() {
 
 function createDonuts() {
   const vertexShader = `
-    varying vec3 vNormal;
-    varying vec3 vPosition;
+    varying vec2 vUv;
+    varying float vWave;
+
+    uniform float uTime;
 
     void main() {
-      vNormal = normalize(normalMatrix * normal);
-      vPosition = (modelViewMatrix * vec4(position, 1.0)).xyz;
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      vUv = uv;
+
+      // Animation de vague kawai
+      float wave = sin(position.y * 10.0 + uTime * 2.0) * 0.05;
+      vWave = wave;
+
+      vec3 pos = position;
+      pos.z += wave;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
     }
   `;
 
   const fragmentShader = `
-    varying vec3 vNormal;
-    varying vec3 vPosition;
-
-    uniform vec3 uColor;
-    uniform vec3 uLightPos;
-    uniform float uTime;
-    uniform float uBass;
+    varying vec2 vUv;
+    varying float vWave;
 
     void main() {
-      // Simple diffuse + specular lighting
-      vec3 lightDir = normalize(uLightPos - vPosition);
-      float diff = max(dot(vNormal, lightDir), 0.0);
+      // Noir en fond
+      vec3 color = vec3(0.0, 0.0, 0.0);
 
-      // add bass-driven pulsation to brightness
-      float pulse = 0.5 + 0.5 * sin(uTime + uBass);
+      // Vert terminal vertical
+      color = mix(color, vec3(0.0, 1.0, 0.5), vUv.y + vWave);
 
-      // specular highlight
-      vec3 viewDir = normalize(-vPosition);
-      vec3 reflectDir = reflect(-lightDir, vNormal);
-      float spec = pow(max(dot(viewDir, reflectDir), 0.0), 16.0);
+      // Accent rose kawai horizontal
+      color = mix(color, vec3(1.0, 0.47, 0.8), vUv.x * 0.5);
 
-      vec3 color = uColor * diff * pulse + vec3(1.0) * spec * 0.3;
       gl_FragColor = vec4(color, 1.0);
     }
   `;
 
   for (let i = 0; i < donutCount; i++) {
-    const geometry = new THREE.TorusGeometry(Math.random() * 0.5 + 0.2, 0.1, 32, 100);
+    const geometry = new THREE.TorusGeometry(
+  Math.random() * 1.5 + 1.0, // outer radius bigger
+  0.4,                       // tube thickness
+  32,
+  100
+);
     geometry.originalPositions = new Float32Array(geometry.attributes.position.array);
 
     const material = new THREE.ShaderMaterial({
@@ -264,9 +268,59 @@ function createDonuts() {
 
 <template>
   <div id="out" class="w-full h-screen relative"></div>
-  <button v-if="audioReady" @click="startAudio"
-    class="absolute top-4 left-4 px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
-    Play
-  </button>
+    <!-- Bouton Play -->
+    <button v-if="audioReady" class="play-button" @click="startAudio">
+      ▶️ Play
+    </button>
   <div id="out"></div>
 </template>
+
+<style scoped>
+.scene-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}
+
+.donuts-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+/* Kawaii CTA Button */
+.play-button {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  padding: 16px 36px;
+  font-size: 22px;
+  font-weight: bold;
+  border: none;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4, #fbc2eb);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 8px 15px rgba(255, 182, 193, 0.4);
+  transition: all 0.3s ease;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+}
+
+/* Hover kawaii sparkle effect */
+.play-button:hover {
+  transform: translate(-50%, -50%) scale(1.15) rotate(-2deg);
+  box-shadow: 0 12px 20px rgba(255, 182, 193, 0.6), 0 0 10px rgba(255,255,255,0.5) inset;
+  background: linear-gradient(135deg, #fbc2eb, #a18cd1, #ffdde1);
+}
+
+/* Cute bouncing animation */
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+  40% { transform: translate(-50%, -55%) scale(1.1) rotate(-3deg); }
+  60% { transform: translate(-50%, -52%) scale(1.05) rotate(2deg); }
+}
+
+.play-button {
+  animation: bounce 2s infinite;
+}
+</style>

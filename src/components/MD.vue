@@ -1,24 +1,32 @@
 <template>
   <div class="readme-container" v-html="readmeHtml"></div>
+
+  <div class="lang-switcher">
+    <button @click="lang = 'fr'">🇫🇷 Français</button>
+    <button @click="lang = 'en'">🇬🇧 English</button>
+  </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, watch, onMounted } from "vue";
 import { marked } from "marked";
 
+const lang = ref("fr"); // default language
 const readmeHtml = ref("");
 
-onMounted(async () => {
+async function loadReadme(language) {
+  const file = language === "fr" ? "../../README_FR.md" : "../../README_EN.md";
   try {
-    const res = await fetch(
-      "../../README.md"
-    );
+    const res = await fetch(file);
     const md = await res.text();
     readmeHtml.value = marked(md);
   } catch (err) {
-    console.error("Error fetching README.md:", err);
+    console.error("Error fetching README:", err);
   }
-});
+}
+
+watch(lang, (newLang) => loadReadme(newLang));
+onMounted(() => loadReadme(lang.value));
 </script>
 
 <style scoped>
@@ -29,23 +37,10 @@ onMounted(async () => {
   font-family: system-ui, sans-serif;
   line-height: 1.6;
 }
-
-.readme-container h1,
-.readme-container h2,
-.readme-container h3 {
-  border-bottom: 1px solid #eaecef;
-  padding-bottom: 0.3em;
-}
-
-.readme-container pre {
-  background: #f6f8fa;
-  padding: 0.8rem;
-  overflow-x: auto;
-}
-
-.readme-container code {
-  background: rgba(27, 31, 35, 0.05);
-  padding: 0.2em 0.4em;
-  border-radius: 4px;
+.lang-switcher {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin: 1rem 0;
 }
 </style>

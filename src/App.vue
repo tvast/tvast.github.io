@@ -5,11 +5,12 @@
     </div>
     <div v-else>
       <AnimatedLogo />
-<Donuts/>
 <Thorus />
       <AiPrompt />
       <Landing />
 <Marketing />
+<Donuts/>
+
     </div>
   </div>
 </template>

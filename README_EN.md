@@ -47,7 +47,3 @@ My unique profile combines:
 - **LinkedIn**: [https://linkedin.com/in/theophile-vast](https://linkedin.com/in/tonprofil)
 - **GitHub**: [https://github.com/tvast](https://github.com/tvast)
 - **Email**: theophile.vast@gmail.com
-
-## Start the development process
-
-https://github.com/b-01-course/manifesto

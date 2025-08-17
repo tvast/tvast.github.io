@@ -1,7 +1,6 @@
 <template>
   <div class="timeline-carousel">
     <!-- Hoopalong background -->
-    <Hoopalong class="background" />
 
     <!-- Timeline foreground -->
     <div v-if="timeline && timeline.length" class="carousel-wrapper">
@@ -26,16 +25,13 @@
 </template>
 
 <script>
-import Hoopalong from './Hoopalong.vue';
 
 export default {
   name: "Timeline",
   props: {
     cv: { type: Array, required: true },
   },
-  components: {
-    Hoopalong
-  },
+
   data() {
     return {
       timeline: [],
