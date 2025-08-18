@@ -10,24 +10,16 @@
 import { ref, watch, onMounted } from "vue";
 import { marked } from "marked";
 
+// Import markdown files as raw text
+import readmeEN from '/_EN.md?raw';
+import readmeFR from '/_FR.md?raw';
+
 const lang = ref("en"); // default language
 const readmeHtml = ref("");
 
-// Local paths inside /public folder
-const rawUrlEN = "/_EN.md";
-const rawUrlFR = "/_FR.md";
-
-async function loadReadme(language) {
-  const url = language === "fr" ? rawUrlFR : rawUrlEN;
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-    const md = await res.text();
-    readmeHtml.value = marked(md);
-  } catch (err) {
-    console.error("Error fetching README:", err);
-    readmeHtml.value = `<p style="color:red">Failed to load README.</p>`;
-  }
+function loadReadme(language) {
+  const md = language === "fr" ? readmeFR : readmeEN;
+  readmeHtml.value = marked(md);
 }
 
 watch(lang, (newLang) => loadReadme(newLang));

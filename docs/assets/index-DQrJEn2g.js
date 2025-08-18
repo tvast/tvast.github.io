@@ -508,7 +508,106 @@ ${n}</tr>
 `}tablecell(n){let e=this.parser.parseInline(n.tokens),t=n.header?"th":"td";return(n.align?`<${t} align="${n.align}">`:`<${t}>`)+e+`</${t}>
 `}strong({tokens:n}){return`<strong>${this.parser.parseInline(n)}</strong>`}em({tokens:n}){return`<em>${this.parser.parseInline(n)}</em>`}codespan({text:n}){return`<code>${bn(n,!0)}</code>`}br(n){return"<br>"}del({tokens:n}){return`<del>${this.parser.parseInline(n)}</del>`}link({href:n,title:e,tokens:t}){let i=this.parser.parseInline(t),r=mf(n);if(r===null)return i;n=r;let s='<a href="'+n+'"';return e&&(s+=' title="'+bn(e)+'"'),s+=">"+i+"</a>",s}image({href:n,title:e,text:t,tokens:i}){i&&(t=this.parser.parseInline(i,this.parser.textRenderer));let r=mf(n);if(r===null)return bn(t);n=r;let s=`<img src="${n}" alt="${t}"`;return e&&(s+=` title="${bn(e)}"`),s+=">",s}text(n){return"tokens"in n&&n.tokens?this.parser.parseInline(n.tokens):"escaped"in n&&n.escaped?n.text:bn(n.text)}},Yc=class{strong({text:n}){return n}em({text:n}){return n}codespan({text:n}){return n}del({text:n}){return n}html({text:n}){return n}text({text:n}){return n}link({text:n}){return""+n}image({text:n}){return""+n}br(){return""}},Zn=class Il{options;renderer;textRenderer;constructor(e){this.options=e||or,this.options.renderer=this.options.renderer||new zo,this.renderer=this.options.renderer,this.renderer.options=this.options,this.renderer.parser=this,this.textRenderer=new Yc}static parse(e,t){return new Il(t).parse(e)}static parseInline(e,t){return new Il(t).parseInline(e)}parse(e,t=!0){let i="";for(let r=0;r<e.length;r++){let s=e[r];if(this.options.extensions?.renderers?.[s.type]){let a=s,l=this.options.extensions.renderers[a.type].call({parser:this},a);if(l!==!1||!["space","hr","heading","code","table","blockquote","list","html","paragraph","text"].includes(a.type)){i+=l||"";continue}}let o=s;switch(o.type){case"space":{i+=this.renderer.space(o);continue}case"hr":{i+=this.renderer.hr(o);continue}case"heading":{i+=this.renderer.heading(o);continue}case"code":{i+=this.renderer.code(o);continue}case"table":{i+=this.renderer.table(o);continue}case"blockquote":{i+=this.renderer.blockquote(o);continue}case"list":{i+=this.renderer.list(o);continue}case"html":{i+=this.renderer.html(o);continue}case"paragraph":{i+=this.renderer.paragraph(o);continue}case"text":{let a=o,l=this.renderer.text(a);for(;r+1<e.length&&e[r+1].type==="text";)a=e[++r],l+=`
 `+this.renderer.text(a);t?i+=this.renderer.paragraph({type:"paragraph",raw:l,text:l,tokens:[{type:"text",raw:l,text:l,escaped:!0}]}):i+=l;continue}default:{let a='Token with "'+o.type+'" type was not found.';if(this.options.silent)return console.error(a),"";throw new Error(a)}}}return i}parseInline(e,t=this.renderer){let i="";for(let r=0;r<e.length;r++){let s=e[r];if(this.options.extensions?.renderers?.[s.type]){let a=this.options.extensions.renderers[s.type].call({parser:this},s);if(a!==!1||!["escape","html","link","image","strong","em","codespan","br","del","text"].includes(s.type)){i+=a||"";continue}}let o=s;switch(o.type){case"escape":{i+=t.text(o);break}case"html":{i+=t.html(o);break}case"link":{i+=t.link(o);break}case"image":{i+=t.image(o);break}case"strong":{i+=t.strong(o);break}case"em":{i+=t.em(o);break}case"codespan":{i+=t.codespan(o);break}case"br":{i+=t.br(o);break}case"del":{i+=t.del(o);break}case"text":{i+=t.text(o);break}default:{let a='Token with "'+o.type+'" type was not found.';if(this.options.silent)return console.error(a),"";throw new Error(a)}}}return i}},vo=class{options;block;constructor(n){this.options=n||or}static passThroughHooks=new Set(["preprocess","postprocess","processAllTokens"]);preprocess(n){return n}postprocess(n){return n}processAllTokens(n){return n}provideLexer(){return this.block?Kn.lex:Kn.lexInline}provideParser(){return this.block?Zn.parse:Zn.parseInline}},Cx=class{defaults=zc();options=this.setOptions;parse=this.parseMarkdown(!0);parseInline=this.parseMarkdown(!1);Parser=Zn;Renderer=zo;TextRenderer=Yc;Lexer=Kn;Tokenizer=ko;Hooks=vo;constructor(...n){this.use(...n)}walkTokens(n,e){let t=[];for(let i of n)switch(t=t.concat(e.call(this,i)),i.type){case"table":{let r=i;for(let s of r.header)t=t.concat(this.walkTokens(s.tokens,e));for(let s of r.rows)for(let o of s)t=t.concat(this.walkTokens(o.tokens,e));break}case"list":{let r=i;t=t.concat(this.walkTokens(r.items,e));break}default:{let r=i;this.defaults.extensions?.childTokens?.[r.type]?this.defaults.extensions.childTokens[r.type].forEach(s=>{let o=r[s].flat(1/0);t=t.concat(this.walkTokens(o,e))}):r.tokens&&(t=t.concat(this.walkTokens(r.tokens,e)))}}return t}use(...n){let e=this.defaults.extensions||{renderers:{},childTokens:{}};return n.forEach(t=>{let i={...t};if(i.async=this.defaults.async||i.async||!1,t.extensions&&(t.extensions.forEach(r=>{if(!r.name)throw new Error("extension name required");if("renderer"in r){let s=e.renderers[r.name];s?e.renderers[r.name]=function(...o){let a=r.renderer.apply(this,o);return a===!1&&(a=s.apply(this,o)),a}:e.renderers[r.name]=r.renderer}if("tokenizer"in r){if(!r.level||r.level!=="block"&&r.level!=="inline")throw new Error("extension level must be 'block' or 'inline'");let s=e[r.level];s?s.unshift(r.tokenizer):e[r.level]=[r.tokenizer],r.start&&(r.level==="block"?e.startBlock?e.startBlock.push(r.start):e.startBlock=[r.start]:r.level==="inline"&&(e.startInline?e.startInline.push(r.start):e.startInline=[r.start]))}"childTokens"in r&&r.childTokens&&(e.childTokens[r.name]=r.childTokens)}),i.extensions=e),t.renderer){let r=this.defaults.renderer||new zo(this.defaults);for(let s in t.renderer){if(!(s in r))throw new Error(`renderer '${s}' does not exist`);if(["options","parser"].includes(s))continue;let o=s,a=t.renderer[o],l=r[o];r[o]=(...c)=>{let u=a.apply(r,c);return u===!1&&(u=l.apply(r,c)),u||""}}i.renderer=r}if(t.tokenizer){let r=this.defaults.tokenizer||new ko(this.defaults);for(let s in t.tokenizer){if(!(s in r))throw new Error(`tokenizer '${s}' does not exist`);if(["options","rules","lexer"].includes(s))continue;let o=s,a=t.tokenizer[o],l=r[o];r[o]=(...c)=>{let u=a.apply(r,c);return u===!1&&(u=l.apply(r,c)),u}}i.tokenizer=r}if(t.hooks){let r=this.defaults.hooks||new vo;for(let s in t.hooks){if(!(s in r))throw new Error(`hook '${s}' does not exist`);if(["options","block"].includes(s))continue;let o=s,a=t.hooks[o],l=r[o];vo.passThroughHooks.has(s)?r[o]=c=>{if(this.defaults.async)return Promise.resolve(a.call(r,c)).then(f=>l.call(r,f));let u=a.call(r,c);return l.call(r,u)}:r[o]=(...c)=>{let u=a.apply(r,c);return u===!1&&(u=l.apply(r,c)),u}}i.hooks=r}if(t.walkTokens){let r=this.defaults.walkTokens,s=t.walkTokens;i.walkTokens=function(o){let a=[];return a.push(s.call(this,o)),r&&(a=a.concat(r.call(this,o))),a}}this.defaults={...this.defaults,...i}}),this}setOptions(n){return this.defaults={...this.defaults,...n},this}lexer(n,e){return Kn.lex(n,e??this.defaults)}parser(n,e){return Zn.parse(n,e??this.defaults)}parseMarkdown(n){return(e,t)=>{let i={...t},r={...this.defaults,...i},s=this.onError(!!r.silent,!!r.async);if(this.defaults.async===!0&&i.async===!1)return s(new Error("marked(): The async option was set to true by an extension. Remove async: false from the parse options object to return a Promise."));if(typeof e>"u"||e===null)return s(new Error("marked(): input parameter is undefined or null"));if(typeof e!="string")return s(new Error("marked(): input parameter is of type "+Object.prototype.toString.call(e)+", string expected"));r.hooks&&(r.hooks.options=r,r.hooks.block=n);let o=r.hooks?r.hooks.provideLexer():n?Kn.lex:Kn.lexInline,a=r.hooks?r.hooks.provideParser():n?Zn.parse:Zn.parseInline;if(r.async)return Promise.resolve(r.hooks?r.hooks.preprocess(e):e).then(l=>o(l,r)).then(l=>r.hooks?r.hooks.processAllTokens(l):l).then(l=>r.walkTokens?Promise.all(this.walkTokens(l,r.walkTokens)).then(()=>l):l).then(l=>a(l,r)).then(l=>r.hooks?r.hooks.postprocess(l):l).catch(s);try{r.hooks&&(e=r.hooks.preprocess(e));let l=o(e,r);r.hooks&&(l=r.hooks.processAllTokens(l)),r.walkTokens&&this.walkTokens(l,r.walkTokens);let c=a(l,r);return r.hooks&&(c=r.hooks.postprocess(c)),c}catch(l){return s(l)}}}onError(n,e){return t=>{if(t.message+=`
-Please report this to https://github.com/markedjs/marked.`,n){let i="<p>An error occurred:</p><pre>"+bn(t.message+"",!0)+"</pre>";return e?Promise.resolve(i):i}if(e)return Promise.reject(t);throw t}}},nr=new Cx;function st(n,e){return nr.parse(n,e)}st.options=st.setOptions=function(n){return nr.setOptions(n),st.defaults=nr.defaults,Wd(st.defaults),st};st.getDefaults=zc;st.defaults=or;st.use=function(...n){return nr.use(...n),st.defaults=nr.defaults,Wd(st.defaults),st};st.walkTokens=function(n,e){return nr.walkTokens(n,e)};st.parseInline=nr.parseInline;st.Parser=Zn;st.parser=Zn.parse;st.Renderer=zo;st.TextRenderer=Yc;st.Lexer=Kn;st.lexer=Kn.lex;st.Tokenizer=ko;st.Hooks=vo;st.parse=st;st.options;st.setOptions;st.use;st.walkTokens;st.parseInline;Zn.parse;Kn.lex;const Rx={class:"lang-switcher"},Px=["innerHTML"],Dx="/_EN.md",Ix="/_FR.md",Lx={__name:"MD",setup(n){const e=Ht("en"),t=Ht("");async function i(r){const s=r==="fr"?Ix:Dx;try{const o=await fetch(s);if(!o.ok)throw new Error(`HTTP error! status: ${o.status}`);const a=await o.text();t.value=st(a)}catch(o){console.error("Error fetching README:",o),t.value='<p style="color:red">Failed to load README.</p>'}}return po(e,r=>i(r)),Ci(()=>i(e.value)),(r,s)=>(Ze(),tt(Ut,null,[Xe("div",Rx,[Xe("button",{onClick:s[0]||(s[0]=o=>e.value="fr")},"🇫🇷 Français"),Xe("button",{onClick:s[1]||(s[1]=o=>e.value="en")},"🇬🇧 English")]),Xe("div",{class:"readme-container",innerHTML:t.value},null,8,Px)],64))}},Ux=oi(Lx,[["__scopeId","data-v-21f6e884"]]),Nx={name:"HeroSection",components:{AnimatedLogo:wd,Timeline:X0,MD:Ux},data(){return{cv:$0,offers:[{icon:"💻",label:"Full Stack Apps"},{icon:"🛒",label:"E-commerce"},{icon:"🚀",label:"Landing Pages"}]}}},Fx={class:"hero-section"};function Ox(n,e,t,i,r,s){const o=xu("MD"),a=xu("Timeline");return Ze(),tt("div",null,[Xe("section",Fx,[gt(go,{name:"fade-slide",appear:""},{default:as(()=>e[0]||(e[0]=[Xe("h1",{class:"hero-title"},"Alien Computing | THEOPHILE VAST",-1)])),_:1,__:[0]}),e[1]||(e[1]=Xe("a",{href:"../../public/IA-FRONT_END-EN-FR-THEOPHILE-VAST.pdf",download:"Theophile_Vast_Resume_EN_FR.pdf",class:"resume-download-button"}," 📄 Download Résumé (EN/FR) ",-1))]),gt(o),gt(a,{cv:r.cv},null,8,["cv"])])}const Bx=oi(Nx,[["render",Ox],["__scopeId","data-v-117255ad"]]);/**
+Please report this to https://github.com/markedjs/marked.`,n){let i="<p>An error occurred:</p><pre>"+bn(t.message+"",!0)+"</pre>";return e?Promise.resolve(i):i}if(e)return Promise.reject(t);throw t}}},nr=new Cx;function st(n,e){return nr.parse(n,e)}st.options=st.setOptions=function(n){return nr.setOptions(n),st.defaults=nr.defaults,Wd(st.defaults),st};st.getDefaults=zc;st.defaults=or;st.use=function(...n){return nr.use(...n),st.defaults=nr.defaults,Wd(st.defaults),st};st.walkTokens=function(n,e){return nr.walkTokens(n,e)};st.parseInline=nr.parseInline;st.Parser=Zn;st.parser=Zn.parse;st.Renderer=zo;st.TextRenderer=Yc;st.Lexer=Kn;st.lexer=Kn.lex;st.Tokenizer=ko;st.Hooks=vo;st.parse=st;st.options;st.setOptions;st.use;st.walkTokens;st.parseInline;Zn.parse;Kn.lex;const Rx=`# 🌐 Artificial Intelligence & Web Interfaces Expert – Multilingual
+
+## About Me
+I am a recognized expert in **artificial intelligence** and **innovative web interface design**, with strong skills in **full-stack development** and the integration of AI solutions into complex projects.
+
+My unique profile combines:
+- Solid technical expertise
+- A strong focus on **user experience (UX)** and **user interface design (UI)**
+- A strategic approach to **digital transformation** and **process optimization**
+
+---
+
+## 🌍 Language Skills
+- **French** 🇫🇷 – Native
+- **English** 🇬🇧 – Fluent
+- **Third Language** 🌐 – Professional
+
+---
+
+## 🧠 Areas of Expertise
+- **Artificial Intelligence (AI)**: deep learning models, NLP, recommendation engines, generative AI
+- **Modern Web Interfaces**: innovative UX/UI, responsive design, accessibility
+- **Full-Stack Development**: HTML5, CSS3, JavaScript/TypeScript, Vue.js, React, Node.js
+- **AI Libraries & Tools**: TensorFlow, PyTorch, OpenAI API
+- **AI – Web Integration**: bridging data processing, intelligent APIs, and user interfaces
+
+---
+
+## 🚀 Services Offered
+- Design and development of **intelligent web applications**
+- Integration of **custom AI solutions**
+- Optimization of **user experience** with real-time data
+- Consulting in **digital transformation** for administrations and businesses
+
+---
+
+## 📈 Added Value
+- Ability to **translate complex business needs** into concrete technical solutions
+- Experience in **international environments**
+- Combining **performance, security, and accessibility**
+- **Continuous innovation** and monitoring of the latest AI and web trends
+
+---
+
+## 📬 Contact Me
+- **Website**: [https://tvast.github.io/](https://tonpseudo.github.io/)
+- **LinkedIn**: [https://linkedin.com/in/theophile-vast](https://linkedin.com/in/tonprofil)
+- **GitHub**: [https://github.com/tvast](https://github.com/tvast)
+- **Email**: theophile.vast@gmail.com
+`,Px=`# 🌐 Expert en Intelligence Artificielle & Interfaces Web – Multilingue
+
+## À propos
+Je suis un expert reconnu en **intelligence artificielle** et en **conception d’interfaces web** innovantes, maîtrisant parfaitement le **développement full-stack** et l’intégration de solutions IA dans des projets complexes.
+
+Mon profil unique combine :
+- Une solide expertise technique
+- Une sensibilité accrue à l’**expérience utilisateur (UX)** et au **design d’interface (UI)**
+- Une approche stratégique de la **digitalisation** et de l’**optimisation des processus**
+
+---
+
+## 🌍 Compétences linguistiques
+- **Français** 🇫🇷 – Langue maternelle
+- **Anglais** 🇬🇧 – Courant
+- **Troisième langue** 🌐 – Professionnel
+
+---
+
+## 🧠 Domaines d’expertise
+- **Intelligence Artificielle (IA)** : modèles de deep learning, NLP, moteurs de recommandation, IA générative
+- **Interfaces Web Modernes** : UX/UI innovante, responsive design, accessibilité
+- **Développement Full-Stack** : HTML5, CSS3, JavaScript/TypeScript, Vue.js, React, Node.js
+- **Bibliothèques & Outils IA** : TensorFlow, PyTorch, OpenAI API
+- **Intégration IA – Web** : fusion entre traitement des données, API intelligentes et interface utilisateur
+
+---
+
+## 🚀 Services proposés
+- Conception et développement d’**applications web intelligentes**
+- Intégration de **solutions IA sur mesure**
+- Optimisation d’**expérience utilisateur** avec données temps réel
+- Conseil en **transformation numérique** pour administrations et entreprises
+
+---
+
+## 📈 Valeur ajoutée
+- Capacité à **traduire des besoins métiers complexes** en solutions techniques concrètes
+- Expérience dans des **environnements internationaux**
+- Allier **performance, sécurité et accessibilité**
+- **Innovation continue** et suivi des dernières tendances IA et web
+
+---
+
+## 📬 Me contacter
+- **Site web** : [https://tvast.github.io/](https://tonpseudo.github.io/)
+- **LinkedIn** : [https://linkedin.com/in/theophile-vast](https://linkedin.com/in/tonprofil)
+- **GitHub** : [https://github.com/tvast](https://github.com/tvast)
+- **Email** : theophile.vast@gmail.com
+
+`,Dx={class:"lang-switcher"},Ix=["innerHTML"],Lx={__name:"MD",setup(n){const e=Ht("en"),t=Ht("");function i(r){const s=r==="fr"?Px:Rx;t.value=st(s)}return po(e,r=>i(r)),Ci(()=>i(e.value)),(r,s)=>(Ze(),tt(Ut,null,[Xe("div",Dx,[Xe("button",{onClick:s[0]||(s[0]=o=>e.value="fr")},"🇫🇷 Français"),Xe("button",{onClick:s[1]||(s[1]=o=>e.value="en")},"🇬🇧 English")]),Xe("div",{class:"readme-container",innerHTML:t.value},null,8,Ix)],64))}},Ux=oi(Lx,[["__scopeId","data-v-7e824296"]]),Nx={name:"HeroSection",components:{AnimatedLogo:wd,Timeline:X0,MD:Ux},data(){return{cv:$0,offers:[{icon:"💻",label:"Full Stack Apps"},{icon:"🛒",label:"E-commerce"},{icon:"🚀",label:"Landing Pages"}]}}},Fx={class:"hero-section"};function Ox(n,e,t,i,r,s){const o=xu("MD"),a=xu("Timeline");return Ze(),tt("div",null,[Xe("section",Fx,[gt(go,{name:"fade-slide",appear:""},{default:as(()=>e[0]||(e[0]=[Xe("h1",{class:"hero-title"},"Alien Computing | THEOPHILE VAST",-1)])),_:1,__:[0]}),e[1]||(e[1]=Xe("a",{href:"../../public/IA-FRONT_END-EN-FR-THEOPHILE-VAST.pdf",download:"Theophile_Vast_Resume_EN_FR.pdf",class:"resume-download-button"}," 📄 Download Résumé (EN/FR) ",-1))]),gt(o),gt(a,{cv:r.cv},null,8,["cv"])])}const Bx=oi(Nx,[["render",Ox],["__scopeId","data-v-117255ad"]]);/**
  * @license
  * Copyright 2010-2025 Three.js Authors
  * SPDX-License-Identifier: MIT
