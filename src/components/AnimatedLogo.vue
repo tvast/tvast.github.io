@@ -23,7 +23,10 @@
         <p v-if="showLogo" class="hero-subtitle">
           Where creativity meets <strong>technology</strong>
         </p>
+
       </transition>
+          <Cursor />
+
     </div>
   </section>
 </template>
@@ -34,6 +37,7 @@ import logo from "../../public/logo.png";
 
 const showLogo = ref(false);
 import { eventBus } from "../eventBus";
+import Cursor from "./Cursor.vue";
 
 function handleLogoClick() {
   eventBus.emit("open-chat");

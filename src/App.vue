@@ -9,7 +9,6 @@
       <AiPrompt />
       <Landing />
 <Marketing />
-<Donuts/>
 
     </div>
   </div>

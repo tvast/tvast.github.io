@@ -6,7 +6,7 @@ import { ImprovedNoise } from 'three/examples/jsm/math/ImprovedNoise.js'
 let scene, camera, renderer, analyser
 const noise = new ImprovedNoise()
 const donuts = []
-const donutCount = 3
+const donutCount = 7
 const audioReady = ref(false)
 let audio, listener
 const isPlaying = ref(false)
@@ -26,7 +26,7 @@ function initScene() {
     0.1,
     100
   );
-  camera.position.z = 8;
+  camera.position.z = 10;
 
   scene.add(new THREE.AmbientLight(0xffffff, 0.5))
 
@@ -168,42 +168,67 @@ function generateColor() {
 }
 
 function createDonuts() {
-  const vertexShader = `
-    varying vec2 vUv;
-    varying float vWave;
+ // Vertex Shader
+// Vertex Shader
+const vertexShader = `
+  varying vec2 vUv;
+  varying float vWave;
+  varying vec3 vNormal;
+  varying vec3 vPosition;
 
-    uniform float uTime;
+  uniform float uTime;
 
-    void main() {
-      vUv = uv;
+  void main() {
+    vUv = uv;
 
-      // Animation de vague kawai
-      float wave = sin(position.y * 10.0 + uTime * 2.0) * 0.05;
-      vWave = wave;
+    // Animation des vagues
+    float wave = sin(position.y * 10.0 + uTime * 2.0) * 0.05;
+    vWave = wave;
 
-      vec3 pos = position;
-      pos.z += wave;
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-    }
-  `;
+    vec3 pos = position;
+    pos.z += wave;
 
-  const fragmentShader = `
-    varying vec2 vUv;
-    varying float vWave;
+    vNormal = normalize(normalMatrix * normal);
+    vPosition = (modelViewMatrix * vec4(pos, 1.0)).xyz;
 
-    void main() {
-      // Noir en fond
-      vec3 color = vec3(0.0, 0.0, 0.0);
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+  }
+`;
 
-      // Vert terminal vertical
-      color = mix(color, vec3(0.0, 1.0, 0.5), vUv.y + vWave);
+// Fragment Shader
+const fragmentShader = `
+  varying vec2 vUv;
+  varying float vWave;
+  varying vec3 vNormal;
+  varying vec3 vPosition;
 
-      // Accent rose kawai horizontal
-      color = mix(color, vec3(1.0, 0.47, 0.8), vUv.x * 0.5);
+  uniform vec3 uBaseColor;
+  uniform vec3 uLightPos;
+  uniform float uSpecularIntensity;
+  uniform float uDiffuseIntensity;
 
-      gl_FragColor = vec4(color, 1.0);
-    }
-  `;
+  void main() {
+    // Base color dynamique
+    vec3 baseColor = uBaseColor;
+
+    // Effet gradient + kawai
+    baseColor = mix(baseColor, vec3(0.0, 1.0, 0.5), vUv.y + vWave);   // vert terminal
+    baseColor = mix(baseColor, vec3(1.0, 0.47, 0.8), vUv.x * 0.5);   // rose kawai
+
+    // Lumière
+    vec3 lightDir = normalize(uLightPos - vPosition);
+    float diff = max(dot(vNormal, lightDir), 0.0);
+
+    vec3 viewDir = normalize(-vPosition);
+    vec3 reflectDir = reflect(-lightDir, vNormal);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 16.0);
+
+    // Combinaison avec intensités réglables
+    vec3 color = baseColor * (diff * uDiffuseIntensity) + vec3(1.0) * spec * uSpecularIntensity;
+
+    gl_FragColor = vec4(color, 1.0);
+  }
+`;
 
   for (let i = 0; i < donutCount; i++) {
     const geometry = new THREE.TorusGeometry(
@@ -214,17 +239,18 @@ function createDonuts() {
     );
     geometry.originalPositions = new Float32Array(geometry.attributes.position.array);
 
-    const material = new THREE.ShaderMaterial({
-      vertexShader,
-      fragmentShader,
-      uniforms: {
-        uColor: { value: new THREE.Color(`hsl(${Math.random() * 360}, 80%, 60%)`) },
-        uLightPos: { value: new THREE.Vector3(5, 5, 5) },
-        uTime: { value: 0.0 },
-        uBass: { value: 0.0 }
-      },
-      side: THREE.DoubleSide
-    });
+const material = new THREE.ShaderMaterial({
+  vertexShader,
+  fragmentShader,
+  uniforms: {
+    uTime: { value: 0 },
+    uLightPos: { value: new THREE.Vector3(5, 5, 5) },
+    uSpecularIntensity: { value: 0.5 },
+    uDiffuseIntensity: { value: 1.0 },
+    uBaseColor: { value: new THREE.Color(0x222244) } // 🔥 couleur de base dynamique
+  },
+  wireframe:true
+});
 
     const donut = new THREE.Mesh(geometry, material);
 

@@ -13,8 +13,9 @@ import { marked } from "marked";
 const lang = ref("en"); // default language
 const readmeHtml = ref("");
 
-const rawUrlEN = "https://raw.githubusercontent.com/tvast/tvast.github.io/main/README_EN.md";
-const rawUrlFR = "https://raw.githubusercontent.com/tvast/tvast.github.io/main/README_FR.md";
+// Local paths inside /public folder
+const rawUrlEN = "/_EN.md";
+const rawUrlFR = "/_FR.md";
 
 async function loadReadme(language) {
   const url = language === "fr" ? rawUrlFR : rawUrlEN;
