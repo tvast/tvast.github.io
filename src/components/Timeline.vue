@@ -67,7 +67,6 @@ export default {
   padding: 2rem 1rem;
   width: 100%;
   min-height: 100vh;
-  overflow: hidden;
 }
 
 /* Hoopalong background fills viewport */
