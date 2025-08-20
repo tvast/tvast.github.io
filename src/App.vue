@@ -5,11 +5,11 @@
     </div>
     <div v-else>
       <AnimatedLogo />
-<Thorus />
+      <Thorus />
       <AiPrompt />
       <Landing />
-<Marketing />
-
+      <Marketing />
+      <Footer/>
     </div>
   </div>
 </template>
@@ -19,11 +19,9 @@ import { ref, onMounted } from "vue";
 import AnimatedLogo from "./components/AnimatedLogo.vue";
 import AiPrompt from "./components/AiPrompt.vue";
 import Landing from "./components/Landing.vue";
-import Donuts from "./components/Donuts.vue";
-import DonutsAnimated from "./components/DonutsAnimated.vue";
-import AnimatedDonutsStyle from "./components/AnimatedDonutsStyle.vue";
 import Thorus from "./components/Thorus.vue";
 import Marketing from "./components/Marketing.vue";
+import Footer from "./components/Footer.vue";
 
 const isLoaded = ref(false);
 const showLogo = ref(true);
@@ -57,10 +55,12 @@ onMounted(() => {
     opacity: 0;
     transform: scale(0.5);
   }
+
   50% {
     opacity: 1;
     transform: scale(3.2);
   }
+
   100% {
     opacity: 0;
     transform: scale(1);

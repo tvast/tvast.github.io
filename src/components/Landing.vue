@@ -12,7 +12,7 @@
                 📄 Download Résumé (EN/FR)
             </a>
         </section>
-        <MD/>
+        <MD />
         <!-- <Masonry /> -->
 
         <!-- Timeline Section -->
@@ -134,15 +134,14 @@ export default {
 }
 
 .timeline-panel {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 12px;
-    padding: 1rem 1.5rem;
-    cursor: pointer;
-    overflow: hidden;
-    max-height: 80px;
-    width: 90%;
-    transition: all 0.4s ease;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  overflow: hidden;
+  width: 90%;
+  transition: all 0.4s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
 .timeline-panel.expanded {

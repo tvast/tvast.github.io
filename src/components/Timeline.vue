@@ -66,9 +66,8 @@ export default {
   align-items: center;
   padding: 2rem 1rem;
   width: 100%;
-  min-height: 100vh;
+  /* min-height: 100vh; REMOVE this */
 }
-
 /* Hoopalong background fills viewport */
 .background {
   position: fixed;
